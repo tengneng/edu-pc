@@ -10,9 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.7",
+    "@ant-design/pro-components": "^2.7.14",
+    "@apollo/client": "^3.11.1",
     "antd": "^5.19.3",
+    "graphql": "^16.9.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.25.1"
   },
   "devDependencies": {
     "@nabla/vite-plugin-eslint": "^2.0.4",
@@ -24,6 +29,7 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "less": "^4.2.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.1"
   }
