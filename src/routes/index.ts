@@ -1,5 +1,5 @@
-import Login from '../containers/Login';
-import Home from '../containers/Home';
+import Login from '@/containers/Login';
+import Home from '@/containers/Home';
 
 export const ROUTE_CONFIG = [
   {

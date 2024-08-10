@@ -13,24 +13,40 @@ import {
 import { Button, Tabs, message, theme } from 'antd';
 import { useMutation } from '@apollo/client';
 import styles from './index.module.less';
-import { LOGIN, SEND_CODE_MSG } from '../../graphql/auth';
+import { LOGIN, SEND_CODE_MSG } from '@/graphql/auth';
+import { AUTH_TOKEN } from '@/utils/constants';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTitle } from '@/hooks';
  
 interface IValue {
   tel: string;
   code: string;
+  autoLogin: boolean;
 }
 
 const Page = () => {
   const { token } = theme.useToken();
   const [run] = useMutation(SEND_CODE_MSG);
   const [login] = useMutation(LOGIN);
+  const [params] = useSearchParams();
+  const nav = useNavigate();
+
+  useTitle('login');
 
   const loginHandler = async (values: IValue) => {
     const res = await login({
       variables: values,
     });
     if(res.data.login.code === 200) {
+      if(values.autoLogin) {
+        sessionStorage.setItem(AUTH_TOKEN, '');
+        localStorage.setItem(AUTH_TOKEN, res.data.login.data);
+      }else {
+        localStorage.setItem(AUTH_TOKEN, '');
+        sessionStorage.setItem(AUTH_TOKEN, res.data.login.data);
+      }
       message.success(res.data.login.message);
+      nav(params.get('orgUrl') || '/');
       return;
     }
     message.error(res.data.login.message);
@@ -38,6 +54,7 @@ const Page = () => {
   return (
     <div className={styles.container}>
       <LoginFormPage
+        initialValues={{ tel: '15620943208' }}
         onFinish={loginHandler}
         backgroundImageUrl="https://mdn.alipayobjects.com/huamei_gcee1x/afts/img/A*y0ZTS6WLwvgAAAAAAAAAAAAADml6AQ/fmt.webp"
         logo="http://water-drop-assets-tyn.oss-cn-shanghai.aliyuncs.com/images/henglogo@2x.png"
@@ -93,11 +110,7 @@ const Page = () => {
               {
                 required: true,
                 message: '请输入手机号！',
-              },
-              {
-                pattern: /^1\d{10}$/,
-                message: '手机号格式错误！',
-              },
+              }
             ]}
           />
           <ProFormCaptcha
